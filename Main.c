@@ -53,12 +53,16 @@ void signUp(){
     userPointer = &user;    //to pass the reference of the data entered by the user
     userNum++;              //increment the value of userNum everytime when a new user SignUp 
     user.id = userNum;      //assign a unique id to every user
+    char raw;
+
+    scanf("%c", &raw);
     printf("Enter user name => ");
-    scanf("%50s", user.name);
+    gets(user.name);
     printf("Enter email  => ");
     scanf("%50s", user.email);
+    scanf("%c", &raw);
     printf("Enter Address  => ");
-    scanf("%50s", user.address);
+    gets(user.address);
     printf("Enter Contact number => ");
     scanf("%lu", &user.contact);
     printf("\n\n");
@@ -101,7 +105,8 @@ void dashboard(char fileName[]){
     FILE *rf;       //read file
     int id = 3;
     char name[50], email[50], address[50];
-    char c, status, raw;
+    char c, status;
+    // char raw;
     long contact;
 
     rf = fopen(fileName, "r");
@@ -111,11 +116,12 @@ void dashboard(char fileName[]){
     printf("---------Things to Do---------\n");
     printThingsToDo(id);     //print things on the ToDo list
     
-    // loop until the status is for exit i.e. 'E' or 'e'
+    // loop until the status is for exit i.e. 'E' or 'e'-----------------------
     while(checkStatus(status) == 0){
         printf("\nPlease enter 'A' if you want to add in the ToDo list: ");
         printf("\nPlease enter 'E' to exit the Dashboard: \n" );
-        scanf("%c", &raw);
+        // scanf("%c", &raw);
+        // fflush(stdin);
         status = getchar();
         if(status == 'A' || status == 'a'){
             addNewThingsToDo(id);
@@ -126,10 +132,11 @@ void dashboard(char fileName[]){
         }
         else if(status == 'D' || status == 'd'){
             deleteThingsToDo(id);
+            printThingsToDo(id);
         }
         else{
             printf("Please enter valid character.\n");
-            printThingsToDo(id);
+            // printThingsToDo(id);
         }
     }
     
@@ -139,7 +146,7 @@ void dashboard(char fileName[]){
 
 // check the user status
 int checkStatus(char status){
-    if(status == 'A' || status == 'a' || status == 'E' || status == 'e' || status == 'D' || status == 'd'){
+    if(status == 'E' || status == 'e'){
         return 1;
     }
     else{
@@ -157,16 +164,29 @@ void printThingsToDo(int id){
     sprintf(fileName, "%d", id);        //converting id from int to string
     strcat(fileName, ".txt");           //create fileName with .txt extension
     rf = fopen(fileName, "r");
+    printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
     while((c = getc(rf)) != EOF){
         printf("%c", c);
     }
+    printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
     fclose(rf);
 }
 
 
 // add new things in the existing list of things to do
 void addNewThingsToDo(int id){
-    return;
+    FILE *af;
+    char fileName[50], content[100];
+    char raw;
+
+    sprintf(fileName, "%d", id);        //converting id from int to string
+    strcat(fileName, ".txt");           //create fileName with .txt extension
+    af = fopen(fileName, "a");
+    scanf("%c", &raw);
+    printf("Enter what you wish to do: ");
+    gets(content);
+    fprintf(af, "%s\n", content);
+    fclose(af);
 }
 
 
